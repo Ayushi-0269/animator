@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animator - Interactive Physics Simulations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 🔷 NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <div class="logo-atom">
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="orbit"></div>
+        <div class="core"></div>
+      </div>
+      <span class="logo-text">Anim<span class="logo-highlight">ator</span></span>
+    </div>
+    <nav class="nav-links">
+      <div class="nav-item"><a href="#">Home</a></div>
+      <div class="nav-item dropdown">
+        <a href="#simulations" class="dropbtn">Simulation <span>▼</span></a>
+        <!-- Main Dropdown -->
+        <div class="dropdown-content">
+          <div class="dropdown-submenu">
+            <a href="#">Class 9 <span class="arrow">▶</span></a>
+            <div class="submenu-content">
+              <a href="#">Motion</a>
+              <a href="#">Force and Laws of Motion</a>
+              <a href="#">Gravitation</a>
+              <a href="#">Work and Energy</a>
+              <a href="#">Sound</a>
+            </div>
+          </div>
+          <div class="dropdown-submenu">
+            <a href="#">Class 10 <span class="arrow">▶</span></a>
+            <div class="submenu-content">
+              <a href="#">Light - Reflection and Refraction</a>
+              <a href="#">Human Eye and Colourful World</a>
+              <a href="#">Electricity</a>
+              <a href="#">Magnetic Effects of Electric Current</a>
+            </div>
+          </div>
+          <div class="dropdown-submenu">
+            <a href="#">Class 11 <span class="arrow">▶</span></a>
+            <div class="submenu-content">
+              <a href="#">Kinematics</a>
+              <a href="#">Laws of Motion</a>
+              <a href="#">Work, Energy and Power</a>
+              <a href="#">Thermodynamics</a>
+              <a href="#">Oscillations and Waves</a>
+            </div>
+          </div>
+          <div class="dropdown-submenu">
+            <a href="#">Class 12 <span class="arrow">▶</span></a>
+            <div class="submenu-content">
+              <a href="#">Electrostatics</a>
+              <a href="#">Current Electricity</a>
+              <a href="#">Magnetic Effects of Current</a>
+              <a href="#">Electromagnetic Induction</a>
+              <a href="#">Optics</a>
+              <a href="#">Modern Physics</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item"><a href="#features">Features</a></div>
+      <div class="nav-item"><a href="#">About Us</a></div>
+      <div class="nav-item"><a href="#contact">Contact</a></div>
+    </nav>
+    <div class="nav-action">
+      <a href="#simulations" class="btn primary-btn">Try Now</a>
+    </div>
+  </header>
+
+  <!-- 🔷 HERO SECTION -->
+  <section class="hero">
+    <div class="bg-decoration" style="background-image: url('img/teacher.svg'); left: 8%; top: 5%; transform: scale(1.1) rotate(-8deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/experiment.svg'); right: 12%; top: 12%; transform: scale(1.1) rotate(5deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/gravity.svg'); left: 18%; bottom: 15%; transform: scale(0.85) rotate(15deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/optics.svg'); right: 22%; top: -5%; transform: scale(0.9) rotate(-10deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/shm.svg'); left: 28%; bottom: -5%; transform: scale(0.7) rotate(20deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/electric.svg'); right: 5%; bottom: 20%; transform: scale(0.8) rotate(-15deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/student.svg'); left: 4%; top: 45%; transform: scale(1.1) rotate(8deg);"></div>
+    <div class="bg-decoration" style="background-image: url('img/researcher.svg'); right: 6%; top: 30%; transform: scale(1.2) rotate(-5deg);"></div>
+    
+    <!-- Filler Shapes Left -->
+    <div class="filler-shape shape-circle" style="left: 12%; top: 18%;"></div>
+    <div class="filler-shape shape-square" style="left: 5%; top: 30%;"></div>
+    <div class="filler-shape shape-plus" style="left: 18%; top: 60%;"></div>
+    <div class="filler-shape shape-star" style="left: 8%; bottom: 25%;">★</div>
+    <div class="filler-shape shape-circle" style="left: 22%; bottom: 10%; background: #10b981;"></div>
+    <div class="filler-shape shape-square" style="left: 2%; top: 10%; background: #ff007f;"></div>
+
+    <!-- Filler Shapes Right -->
+    <div class="filler-shape shape-circle" style="right: 15%; top: 35%; background: #ff007f;"></div>
+    <div class="filler-shape shape-square" style="right: 8%; top: 15%;"></div>
+    <div class="filler-shape shape-plus" style="right: 20%; top: 50%;"></div>
+    <div class="filler-shape shape-star" style="right: 5%; bottom: 30%;">★</div>
+    <div class="filler-shape shape-circle" style="right: 25%; bottom: 15%; background: #8b5cf6;"></div>
+    <div class="filler-shape shape-square" style="right: 12%; bottom: 5%; background: #eab308;"></div>
+    <div class="vector-bg left-img"></div>
+    <div class="vector-bg right-img"></div>
+    <div class="hero-content">
+      <h1>Simulation Library</h1>
+      <div class="search-box">
+        <input type="text" placeholder="Simulator Title or Phrase or Keywords">
+        <button class="btn search-btn">Search Here</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔷 FILTER SECTION -->
+  <section class="filter-section" id="simulations">
+    <h2>Explore Simulations by Class</h2>
+      <div class="filter-controls">
+      <select id="classFilter" class="modern-select">
+        <option value="all">All Classes</option>
+        <option value="9">Class 9</option>
+        <option value="10">Class 10</option>
+        <option value="11">Class 11</option>
+        <option value="12">Class 12</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- 🔷 RECOMMENDATIONS / SLIDER -->
+  <section class="recommended">
+    <div class="container">
+      <div class="slider-wrapper">
+        <button class="slider-btn prev">&#10094;</button>
+        <div class="slides" id="slides">
+          <a href="projectile.html" class="card sim-card" style="text-decoration: none;">
+            <div class="card-img">
+              <img src="img/projectile.svg" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;" alt="Projectile Motion">
+            </div>
+            <div class="card-content">
+              <h3>Projectile Motion</h3>
+              <p>Class 11 Kinematics</p>
+            </div>
+          </a>
+          <div class="card sim-card">
+            <div class="card-img">
+              <img src="img/gravity.svg" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;" alt="Gravity & Orbits">
+            </div>
+            <div class="card-content">
+              <h3>Gravity & Orbits</h3>
+              <p>Class 9 & 11 Gravitation</p>
+            </div>
+          </div>
+          <a href="shm.html" class="card sim-card" style="text-decoration: none;">
+            <div class="card-img">
+              <img src="img/shm.svg" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;" alt="Simple Harmonic Motion">
+            </div>
+            <div class="card-content">
+              <h3>Simple Harmonic Motion</h3>
+              <p>Class 11 Oscillations</p>
+            </div>
+          </a>
+          <div class="card sim-card">
+            <div class="card-img">
+              <img src="img/optics.svg" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;" alt="Optics & Lenses">
+            </div>
+            <div class="card-content">
+              <h3>Optics & Lenses</h3>
+              <p>Class 10 & 12 Optics</p>
+            </div>
+          </div>
+          <div class="card sim-card">
+            <div class="card-img">
+              <img src="img/electric.svg" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;" alt="Electric Fields">
+            </div>
+            <div class="card-content">
+              <h3>Electric Fields</h3>
+              <p>Class 12 Electrostatics</p>
+            </div>
+          </div>
+        </div>
+        <button class="slider-btn next">&#10095;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔷 FEATURES SECTION -->
+  <section class="features-section" id="features">
+    <h2>Why Choose Animator?</h2>
+      <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎮</div>
+        <h3>Interactive Lab</h3>
+        <p>Tweak parameters in real-time, drag and drop objects, and see instant results without needing physical equipment.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Curriculum Aligned</h3>
+        <p>Our library contains hundreds of simulations strictly following the physics syllabus from Class 9 to Class 12.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Live Graphs</h3>
+        <p>Uncover deep mathematical relationships with automated graphing that visualizes complex physics events accurately.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔷 STATS -->
+  <section class="stats">
+    <div class="stat-box">
+      <h3 class="stat-number">250+</h3>
+      <p>Simulations</p>
+    </div>
+    <div class="stat-box">
+      <h3 class="stat-number">Classes</h3>
+      <p>9 through 12</p>
+    </div>
+    <div class="stat-box">
+      <h3 class="stat-number">100%</h3>
+      <p>Web Browser Based</p>
+    </div>
+  </section>
+
+  <!-- 🔷 FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">Animator</div>
+      <p>The Ultimate Physics Simulation Platform. No downloads required.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Animator. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/main.js"></script>
+  <script src="js/slider.js"></script>
+
+  <script>
+    // Smart Sticky Navbar
+    let lastScroll = 0;
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll <= 80) {
+        navbar.classList.remove('scrolled');
+        navbar.classList.remove('hide');
+      } else {
+        navbar.classList.add('scrolled');
+        // Scroll Down -> Hide
+        if (currentScroll > lastScroll && currentScroll > 250) {
+          navbar.classList.add('hide');
+        } 
+        // Scroll Up -> Show
+        else {
+          navbar.classList.remove('hide');
+        }
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulation</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1 style="text-align:center;">Simulation</h1>
+
+<div class="sim-layout">
+
+  <!-- LEFT PANEL (TOOLS) -->
+  <div class="tools">
+    <h3>Tools</h3>
+    <div draggable="true" class="tool" ondragstart="drag(event)" id="ball">Ball</div>
+  </div>
+
+  <!-- CENTER (CANVAS) -->
+  <canvas id="canvas" width="800" height="400"
+    ondrop="drop(event)" ondragover="allowDrop(event)">
+  </canvas>
+
+  <!-- RIGHT PANEL (CONTROLS) -->
+  <div class="controls">
+    <h3>Controls</h3>
+    <label>Velocity</label>
+    <input type="range" id="velocity" min="1" max="20" value="10">
+
+    <button onclick="startSimulation()">Run</button>
+  </div>
+
+</div>
+
+<canvas id="graph" width="800" height="200"></canvas>
+
+<script src="js/simulation.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/graph.js"></script>
+</body>
+</html>

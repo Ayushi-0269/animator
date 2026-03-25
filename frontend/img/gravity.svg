@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <rect width="600" height="400" fill="#020617"/>
+  <!-- Stars -->
+  <circle cx="100" cy="100" r="2" fill="#fff"/>
+  <circle cx="500" cy="80" r="1.5" fill="#fff"/>
+  <circle cx="300" cy="300" r="2.5" fill="#fff"/>
+  <circle cx="450" cy="350" r="1" fill="#fff"/>
+  <circle cx="200" cy="50" r="1.5" fill="#fff"/>
+  <circle cx="50" cy="250" r="1" fill="#fff"/>
+  <!-- Orbit Path -->
+  <ellipse cx="300" cy="200" rx="200" ry="80" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="8 8"/>
+  <!-- Planet 1 (Center) -->
+  <circle cx="300" cy="200" r="40" fill="#f59e0b"/>
+  <!-- Planet 2 (Orbiting) -->
+  <circle cx="100" cy="200" r="15" fill="#38bdf8"/>
+</svg>

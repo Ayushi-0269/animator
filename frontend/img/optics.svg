@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <rect width="600" height="400" fill="#1e293b"/>
+  <!-- Beam of light -->
+  <polygon points="0,220 250,220 250,200 0,200" fill="#ffffff" opacity="0.9"/>
+  <!-- Prism -->
+  <polygon points="300,100 200,300 400,300" fill="#94a3b8" opacity="0.3" stroke="#fff" stroke-width="2"/>
+  <!-- Dispersed Light -->
+  <polygon points="350,200 600,100 600,120" fill="#ef4444" opacity="0.8"/>
+  <polygon points="350,200 600,140 600,160" fill="#f59e0b" opacity="0.8"/>
+  <polygon points="350,200 600,180 600,200" fill="#eab308" opacity="0.8"/>
+  <polygon points="350,200 600,220 600,240" fill="#22c55e" opacity="0.8"/>
+  <polygon points="350,200 600,260 600,280" fill="#3b82f6" opacity="0.8"/>
+  <polygon points="350,200 600,300 600,320" fill="#a855f7" opacity="0.8"/>
+</svg>

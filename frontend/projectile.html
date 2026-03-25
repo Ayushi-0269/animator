@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projectile Motion Simulation - Animator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background-color: var(--bg-light); margin: 0; padding-top: 80px; }
+    .sim-header { text-align: center; padding: 20px; }
+    .sim-arena { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px; }
+    .canvas-container { background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 20px; }
+    canvas { background: #e2e8f0; border-radius: 8px; border: 2px solid #cbd5e1; display: block; }
+    
+    .panel { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-width: 300px; display: flex; flex-direction: column; gap: 20px; }
+    .panel h3 { margin-bottom: 0px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+    .control-group { display: flex; flex-direction: column; gap: 8px; }
+    .control-group label { font-weight: 600; font-size: 14px; color: var(--text-dark); }
+    .control-group input[type="range"] { accent-color: var(--primary-color); }
+    
+    .stats-box { background: #f1f5f9; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 14px; }
+    .stats-box div { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR REUSE -->
+  <header class="navbar">
+    <a href="index.html" class="logo" style="text-decoration:none;">
+      <div class="logo-atom">
+        <div class="orbit"></div><div class="orbit"></div><div class="orbit"></div><div class="core"></div>
+      </div>
+      <span class="logo-text">Anim<span class="logo-highlight">ator</span></span>
+    </a>
+    <div class="nav-action">
+      <a href="index.html" class="btn secondary-btn" style="color:var(--primary-color); border-color:var(--primary-color);">Back to Home</a>
+    </div>
+  </header>
+
+  <div class="sim-header">
+    <h2>🚀 Projectile Motion Simulation</h2>
+    <p>Visualize the parabolic trajectory of an object launched into the air.</p>
+  </div>
+
+  <div class="sim-arena">
+    <!-- Simulation Canvas -->
+    <div class="canvas-container">
+      <canvas id="simCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div class="panel">
+      <h3>Control Panel</h3>
+      
+      <div class="control-group">
+        <label>Initial Velocity (v): <span id="v-val">60</span> m/s</label>
+        <input type="range" id="velocity" min="10" max="150" value="60">
+      </div>
+      
+      <div class="control-group">
+        <label>Launch Angle (θ): <span id="a-val">45</span>°</label>
+        <input type="range" id="angle" min="1" max="89" value="45">
+      </div>
+      
+      <div class="control-group">
+        <label>Gravity (g): <span id="g-val">9.8</span> m/s²</label>
+        <input type="range" id="gravity" min="1" max="25" value="9.8" step="0.1">
+      </div>
+      
+      <button class="btn primary-btn" id="fireBtn">Launch Projectile</button>
+      <button class="btn" style="background:#cbd5e1;" id="resetBtn">Reset View</button>
+
+      <!-- Real-time Stats -->
+      <div class="stats-box">
+        <div><strong>Max Height:</strong> <span id="stat-h">0.00</span> m</div>
+        <div><strong>Total Flight Time:</strong> <span id="stat-t">0.00</span> s</div>
+        <div><strong>Max Range:</strong> <span id="stat-r">0.00</span> m</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI Elements
+    const vSlider = document.getElementById('velocity');
+    const aSlider = document.getElementById('angle');
+    const gSlider = document.getElementById('gravity');
+    
+    // State
+    const RENDER_SCALE = 3; // pixels per meter
+    let animationId;
+    let isRunning = false;
+    let t = 0; // time string
+    let path = [];
+    
+    // Physics Parameters
+    let v0, angle, g, rad;
+    
+    function updateValues() {
+      document.getElementById('v-val').innerText = vSlider.value;
+      document.getElementById('a-val').innerText = aSlider.value;
+      document.getElementById('g-val').innerText = gSlider.value;
+      
+      v0 = parseFloat(vSlider.value);
+      angle = parseFloat(aSlider.value);
+      g = parseFloat(gSlider.value);
+      rad = angle * (Math.PI / 180);
+    }
+    
+    vSlider.addEventListener('input', updateValues);
+    aSlider.addEventListener('input', updateValues);
+    gSlider.addEventListener('input', updateValues);
+
+    function drawGround() {
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
+    }
+    
+    function calculateStats() {
+      const H = (v0 * v0 * Math.pow(Math.sin(rad), 2)) / (2 * g);
+      const T = (2 * v0 * Math.sin(rad)) / g;
+      const R = (v0 * v0 * Math.sin(2 * rad)) / g;
+      
+      document.getElementById('stat-h').innerText = H.toFixed(2);
+      document.getElementById('stat-t').innerText = T.toFixed(2);
+      document.getElementById('stat-r').innerText = R.toFixed(2);
+    }
+
+    function reset() {
+      cancelAnimationFrame(animationId);
+      isRunning = false;
+      t = 0;
+      path = [];
+      updateValues();
+      calculateStats();
+      draw();
+    }
+
+    function fire() {
+      reset();
+      isRunning = true;
+      animate();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGround();
+      
+      // Draw Grid / Axis
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.beginPath();
+      for(let i=0; i<canvas.width; i+=50) { ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height-30); }
+      for(let i=0; i<canvas.height-30; i+=50) { ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); }
+      ctx.stroke();
+
+      // Launch Point
+      const originX = 30;
+      const originY = canvas.height - 30;
+      
+      // Cannon Drawing
+      ctx.save();
+      ctx.translate(originX, originY);
+      ctx.rotate(-rad);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(-10, -10, 40, 20);
+      ctx.restore();
+
+      // Draw Path
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      for (let i = 0; i < path.length; i++) {
+        const px = originX + (path[i].x * RENDER_SCALE);
+        const py = originY - (path[i].y * RENDER_SCALE);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      if(path.length > 0) {
+        const current = path[path.length - 1];
+        const ballX = originX + (current.x * RENDER_SCALE);
+        const ballY = originY - (current.y * RENDER_SCALE);
+        
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+        ctx.fillStyle = '#ea580c';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    function animate() {
+      if (!isRunning) return;
+      t += 0.05; // Timestep
+      
+      const x = v0 * Math.cos(rad) * t;
+      const y = (v0 * Math.sin(rad) * t) - (0.5 * g * t * t);
+      
+      if (y >= 0) {
+        path.push({x, y});
+        draw();
+        animationId = requestAnimationFrame(animate);
+      } else {
+        // Hit the ground
+        const T_total = (2 * v0 * Math.sin(rad)) / g;
+        const x_final = v0 * Math.cos(rad) * T_total;
+        path.push({x: x_final, y: 0});
+        draw();
+        isRunning = false;
+      }
+    }
+
+    document.getElementById('fireBtn').addEventListener('click', fire);
+    document.getElementById('resetBtn').addEventListener('click', reset);
+    
+    // Initial Render
+    reset();
+  </script>
+</body>
+</html>

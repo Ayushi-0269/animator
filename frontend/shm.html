@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Harmonic Motion - Animator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background-color: var(--bg-light); margin: 0; padding-top: 80px; }
+    .sim-header { text-align: center; padding: 20px; }
+    .sim-arena { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 20px; }
+    .canvas-container { background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 20px; }
+    canvas { background: #e2e8f0; border-radius: 8px; border: 2px solid #cbd5e1; display: block; }
+    
+    .panel { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); min-width: 300px; display: flex; flex-direction: column; gap: 20px; }
+    .panel h3 { margin-bottom: 0px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+    .control-group { display: flex; flex-direction: column; gap: 8px; }
+    .control-group label { font-weight: 600; font-size: 14px; color: var(--text-dark); }
+    .control-group input[type="range"] { accent-color: var(--primary-color); }
+    
+    .stats-box { background: #f1f5f9; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 14px; }
+    .stats-box div { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR REUSE -->
+  <header class="navbar">
+    <a href="index.html" class="logo" style="text-decoration:none;">
+      <div class="logo-atom">
+        <div class="orbit"></div><div class="orbit"></div><div class="orbit"></div><div class="core"></div>
+      </div>
+      <span class="logo-text">Anim<span class="logo-highlight">ator</span></span>
+    </a>
+    <div class="nav-action">
+      <a href="index.html" class="btn secondary-btn" style="color:var(--primary-color); border-color:var(--primary-color);">Back to Home</a>
+    </div>
+  </header>
+
+  <div class="sim-header">
+    <h2>⏱️ Simple Harmonic Motion</h2>
+    <p>Analyze the oscillation pattern of a simple pendulum.</p>
+  </div>
+
+  <div class="sim-arena">
+    <!-- Simulation Canvas -->
+    <div class="canvas-container">
+      <canvas id="simCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <!-- Controls -->
+    <div class="panel">
+      <h3>Control Panel</h3>
+      
+      <div class="control-group">
+        <label>String Length (L): <span id="l-val">2.5</span> m</label>
+        <input type="range" id="length" min="1" max="5" value="2.5" step="0.1">
+      </div>
+      
+      <div class="control-group">
+        <label>Gravity (g): <span id="g-val">9.8</span> m/s²</label>
+        <input type="range" id="gravity" min="1" max="25" value="9.8" step="0.1">
+      </div>
+      
+      <div class="control-group">
+        <label>Starting Angle: <span id="a-val">30</span>°</label>
+        <input type="range" id="angle" min="5" max="60" value="30">
+      </div>
+      
+      <button class="btn primary-btn" id="startBtn">Play / Pause</button>
+
+      <!-- Real-time Stats -->
+      <div class="stats-box">
+        <div><strong>Time Period (T):</strong> <span id="stat-t">0.00</span> s</div>
+        <div><strong>Current Angle:</strong> <span id="stat-ca">0.00</span>°</div>
+        <div><strong>Kinetic Energy:</strong> <span id="stat-ke">Oscillating</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // UI Elements
+    const lSlider = document.getElementById('length');
+    const gSlider = document.getElementById('gravity');
+    const aSlider = document.getElementById('angle');
+    
+    // State
+    const RENDER_SCALE = 60; // Pixels per meter for length
+    let animationId;
+    let isRunning = true;
+    let time = 0; 
+    
+    // Params
+    let L, G, initAngleStr, initTheta, omega;
+    let currentTheta = 0;
+    
+    function updateValues() {
+      document.getElementById('l-val').innerText = lSlider.value;
+      document.getElementById('g-val').innerText = gSlider.value;
+      document.getElementById('a-val').innerText = aSlider.value;
+      
+      L = parseFloat(lSlider.value);
+      G = parseFloat(gSlider.value);
+      initAngleStr = parseFloat(aSlider.value);
+      initTheta = initAngleStr * (Math.PI / 180);
+      
+      omega = Math.sqrt(G / L);
+      
+      const T = 2 * Math.PI * Math.sqrt(L / G);
+      document.getElementById('stat-t').innerText = T.toFixed(2);
+      
+      if(!isRunning) {
+        time = 0; // reset if paused and tweaking
+        draw(); 
+      }
+    }
+    
+    lSlider.addEventListener('input', updateValues);
+    gSlider.addEventListener('input', updateValues);
+    aSlider.addEventListener('input', () => { time = 0; updateValues(); }); // Reset time when angle changes
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      isRunning = !isRunning;
+      if (isRunning) {
+        lastTime = performance.now();
+        animate(lastTime);
+      }
+    });
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const pivotX = canvas.width / 2;
+      const pivotY = 50;
+      
+      // Calculate bob position
+      currentTheta = initTheta * Math.cos(omega * time);
+      document.getElementById('stat-ca').innerText = (currentTheta * (180/Math.PI)).toFixed(1);
+      
+      const bobX = pivotX + (L * RENDER_SCALE) * Math.sin(currentTheta);
+      const bobY = pivotY + (L * RENDER_SCALE) * Math.cos(currentTheta);
+      
+      // Draw Pivot
+      ctx.beginPath();
+      ctx.moveTo(pivotX - 50, pivotY);
+      ctx.lineTo(pivotX + 50, pivotY);
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#334155';
+      ctx.stroke();
+
+      // Draw String
+      ctx.beginPath();
+      ctx.moveTo(pivotX, pivotY);
+      ctx.lineTo(bobX, bobY);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#64748b';
+      ctx.stroke();
+      
+      // Draw Bob
+      ctx.beginPath();
+      ctx.arc(bobX, bobY, 20, 0, Math.PI * 2);
+      ctx.fillStyle = '#ea580c';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#fff';
+      ctx.stroke();
+      
+      // Trajectory Arcs (Background visual)
+      ctx.beginPath();
+      ctx.arc(pivotX, pivotY, L * RENDER_SCALE, Math.PI/2 - initTheta, Math.PI/2 + initTheta);
+      ctx.strokeStyle = 'rgba(234, 88, 12, 0.2)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    let lastTime = performance.now();
+    function animate(currentTime) {
+      if (!isRunning) return;
+      
+      let deltaTime = (currentTime - lastTime) / 1000; // in seconds
+      lastTime = currentTime;
+      time += deltaTime; // scale real time
+      
+      draw();
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    updateValues();
+    animate(performance.now());
+  </script>
+</body>
+</html>
