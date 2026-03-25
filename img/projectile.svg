@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <rect width="600" height="400" fill="#1e293b"/>
+  <!-- Grid -->
+  <path d="M0 100h600M0 200h600M0 300h600M100 0v400M200 0v400M300 0v400M400 0v400M500 0v400" stroke="#334155" stroke-width="2"/>
+  <!-- Ground -->
+  <rect y="350" width="600" height="50" fill="#0f172a"/>
+  <!-- Path -->
+  <path d="M 50 350 Q 300 0 550 350" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="10 10"/>
+  <!-- Projectile -->
+  <circle cx="300" cy="175" r="15" fill="#ef4444"/>
+</svg>
